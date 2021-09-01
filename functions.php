@@ -1,0 +1,3 @@
+<?php
+
+// YOUR FUNCTIONS CAN LIVE HERE 🏠
