@@ -70,3 +70,4 @@ Use HTML & CSS to customize the interface, error messages etc...
 **You are free to use any CSS framework and PHP module you want**
 *** 
 
+Add the account `UlysC` as a colaborator on your repo if you'd like feedback 😉
