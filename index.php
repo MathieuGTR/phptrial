@@ -31,25 +31,53 @@
       echo "CSV file : <br/>";
       print_r($file_content);
       echo "<br/><br/>";
-      // $csv = file_get_contents($file);
-      $array = array_map("str_getcsv", explode("\n", $file_content));
-      $file_content_json = json_encode($array);
-      echo "converted to JSON : <br/>";
-      print_r($file_content_json);
+
+      $lineContent = array_map("str_getcsv", explode("\n", $file_content));
+
+      $headers = $lineContent[0];
+
+      $jsonArray = array();
+      $rowCount = count($lineContent);
+      for ($i=1;$i<$rowCount;$i++) {
+          foreach ($lineContent[$i] as $key => $column) {
+              $jsonArray[$i][$headers[$key]] = $column;
+          }
+      } 
+
+      print_r($jsonArray);
+
+      $final_json = json_encode(array_values($jsonArray), JSON_PRETTY_PRINT);
+
+      echo "<br/><br/>";
+      print_r ($final_json);
+
     }
+
+    //_________________________GET JSON CONTENT
     else if ($file_extension == "json"){
       echo "JSON file : <br />";
       $file_content_json = file_get_contents($file_tmp_name);
       print_r($file_content_json);
+      echo "<br/>";
     }
 
     //_________________________JSON CONTENT CHECK
-    if (!(array_key_exists('name', $file_content_json)) || 
-      !(array_key_exists('surname', $file_content_json)) ||
-      !(array_key_exists('city', $file_content_json))){
-        echo "<p>Missing JSON content</p>";
-        exit();
-      }
+    //_____TODO
+    // $file_content_json_decoded = json_decode($file_content_json,true);
+    // echo "<br/>JSON file decoded : <br/>";
+    // print_r($file_content_json_decoded);
+ 
+    // if (array_key_exists('city',$file_content_json)){
+    //   echo "<br/>city exists<br/>";
+      
+    // }
+
+    // if (!(array_key_exists('name', $file_content_json)) || 
+    //   !(array_key_exists('surname', $file_content_json)) ||
+    //   !(array_key_exists('city', $file_content_json))){
+    //     echo "<p>Missing JSON content</p>";
+    //     exit();
+    //   }
 
     // $request = 
 
