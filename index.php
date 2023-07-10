@@ -1,6 +1,6 @@
 <?php
-  include ("functions.php");
-  include ("init.php");
+  include ("./functions.php");
+  include ("./init.php");
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -44,42 +44,74 @@
           }
       } 
 
+      echo "JSON Array conversion : <br/>";
       print_r($jsonArray);
+      echo "<br/><br/>";
 
       $final_json = json_encode(array_values($jsonArray), JSON_PRETTY_PRINT);
 
+      echo "Final JSON file: <br/>";
+      var_dump($final_json);
       echo "<br/><br/>";
-      print_r ($final_json);
-
     }
 
     //_________________________GET JSON CONTENT
     else if ($file_extension == "json"){
-      echo "JSON file : <br />";
-      $file_content_json = file_get_contents($file_tmp_name);
-      print_r($file_content_json);
+      echo "Final JSON file : <br />";
+      $final_json = file_get_contents($file_tmp_name);
+      var_dump($final_json);
       echo "<br/>";
     }
 
     //_________________________JSON CONTENT CHECK
     //_____TODO
-    // $file_content_json_decoded = json_decode($file_content_json,true);
-    // echo "<br/>JSON file decoded : <br/>";
-    // print_r($file_content_json_decoded);
- 
-    // if (array_key_exists('city',$file_content_json)){
-    //   echo "<br/>city exists<br/>";
-      
-    // }
+    echo "<br/><br/>Final JSON-to-check: <br/>";
+    $final_json_tocheck = json_decode($final_json, true);
+    print_r ($final_json_tocheck);
 
-    // if (!(array_key_exists('name', $file_content_json)) || 
-    //   !(array_key_exists('surname', $file_content_json)) ||
-    //   !(array_key_exists('city', $file_content_json))){
-    //     echo "<p>Missing JSON content</p>";
-    //     exit();
-    //   }
+    echo "<br/>________________<br/>";
 
-    // $request = 
+    $file_content_ok = true;
+    for ($i=0; $i < count($final_json_tocheck); $i++) { 
+      if (
+        !array_key_exists("name",$final_json_tocheck[$i])
+        || !array_key_exists("surname",$final_json_tocheck[$i])
+        || !array_key_exists("city",$final_json_tocheck[$i])
+      )
+      {
+        echo "Il manque une valeur dans l'objet position ".$i." !<br/>";
+        $file_content_ok = false;
+      }
+      else {
+        echo "Valeurs OK dans l'objet position ".$i." !<br/>";
+      }
+    }
+
+    //_________________________POST REQUEST
+    if ($file_content_ok){
+
+      $data = '{"data": '.$final_json.', "token": "'.API_TOKEN.'"}';
+      var_dump($data);
+      // initiate the curl request
+      $request = curl_init();
+
+      curl_setopt($request, CURLOPT_URL,API_URL);
+      curl_setopt($request, CURLOPT_POST, 1);
+      curl_setopt($request, CURLOPT_POSTFIELDS,$data);
+
+      // catch the response
+      curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+
+      $response = curl_exec($request);
+
+      curl_close ($request);
+
+      // do processing for the $response
+      echo "<br/><br/>POST Request response : <br/>";
+      print_r($response);
+
+    }
+
 
   }
 ?>
