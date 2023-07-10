@@ -44,7 +44,7 @@
           }
       } 
 
-      echo "JSON Array conversion : <br/>";
+      echo "Array conversion : <br/>";
       print_r($jsonArray);
       echo "<br/><br/>";
 
@@ -65,7 +65,7 @@
 
     //_________________________JSON CONTENT CHECK
     //_____TODO
-    echo "<br/><br/>Final JSON-to-check: <br/>";
+    echo "<br/><br/>Final File-to-check: <br/>";
     $final_json_tocheck = json_decode($final_json, true);
     print_r ($final_json_tocheck);
 
@@ -112,7 +112,9 @@
 
     }
 
-
+    else{
+      echo "<br/>Fichier invalide, requête POST non envoyée.";
+    }
   }
 ?>
 
