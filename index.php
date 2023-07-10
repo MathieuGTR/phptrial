@@ -1,6 +1,8 @@
 <?php
-
+  require ("functions.php");
   require ("init.php");
+
+  echo "<p>heyo</p>";
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $file_tmp_name = $_FILES["file"]["tmp_name"];
@@ -11,14 +13,13 @@
     // PROCESS THE FILE AND POST CONTENT ✉
 
     //_________________________SIZE CHECK
-    if ($_FILES["file"]["size"] < 2097152){
-      echo "File too big";
+    if (checkSize($_FILES["file"]["size"])){
       exit();
     }
 
     //_________________________EXTENSION CHECK
     else if ($file_extension != "csv" && $file_extension != "json"){
-      echo "Wrong file extension";
+      echo "<p>Wrong file extension</p>";
       exit();
     }
 
@@ -37,9 +38,12 @@
     if (!(array_key_exists('name', $file_content_json)) || 
       !(array_key_exists('name', $file_content_json)) ||
       !(array_key_exists('name', $file_content_json))){
-        echo "Missing JSON content";
+        echo "<p>Missing JSON content</p>";
         exit();
       }
+
+    // $request = 
+
   }
 ?>
 
@@ -53,11 +57,10 @@
   <title>File handler</title>
 </head>
 
-<body>
-  <form method="post" enctype="multipart/form-data" action ="<?php API_URL ?>">
-    <input type="file" name="file" id="fileInput" type="file">
-    <button type="submit">GO</button>
-  </form>
-</body>
-
+  <body>
+    <form method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" type="file" accept=".csv,.json">
+      <button type="submit">GO</button>
+    </form>
+  </body>
 </html>
