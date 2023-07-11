@@ -44,10 +44,23 @@
           }
       } 
 
-      echo "Array conversion : <br/>";
+      echo "Array conversion ('jsonArray') : <br/>";
+      echo "<pre>";
       print_r($jsonArray);
-      echo "<br/><br/>";
+      echo "</pre><br/><br/>";
 
+      //_________________________TRIM INCORRECT KEYS
+      foreach ($jsonArray as $key => $value) {
+        foreach ($value as $innerkey => $innervalue) {
+          if(trim($innerkey) != $innerkey){
+            $jsonArray[$key][trim($innerkey)] = $innervalue;
+            unset($jsonArray[$key][$innerkey]);
+          }
+        }
+      }
+      echo "<br/>";
+
+      //_________________________FINAL JSON FROM CLEAN CSV
       $final_json = json_encode(array_values($jsonArray), JSON_PRETTY_PRINT);
 
       echo "Final JSON file: <br/>";
@@ -55,7 +68,7 @@
       echo "<br/><br/>";
     }
 
-    //_________________________GET JSON CONTENT
+    //_________________________IF NOT CSV, GET JSON CONTENT
     else if ($file_extension == "json"){
       echo "Final JSON file : <br />";
       $final_json = file_get_contents($file_tmp_name);
@@ -104,6 +117,7 @@
 
       $response = curl_exec($request);
 
+      // Close cURL request
       curl_close ($request);
 
       // do processing for the $response
